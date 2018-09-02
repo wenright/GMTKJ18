@@ -35,6 +35,7 @@ function Game:init()
   self.canvas = love.graphics.newCanvas(GAME_WIDTH, GAME_HEIGHT)
 
   self.defaultBg = {0.13, 0.13, 0.13, 1}
+  self.hitBg = {0.25, 0.25, 0.25, 1}
   self.bg = {0.13, 0.13, 0.13, 1}
 
   -- Walls for player collision

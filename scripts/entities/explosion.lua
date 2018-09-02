@@ -23,10 +23,14 @@ function Explosion:init(properties)
   end)
 
   Game:shakeScreen()
-  
+
   Game.hitstop = true
   Game.timer:after(0.1, function()
     Game.hitstop = false
+  end)
+  Game.bg = Game.hitBg
+  Game.timer:after(0.05, function()
+    Game.bg = Game.defaultBg
   end)
 end
 
