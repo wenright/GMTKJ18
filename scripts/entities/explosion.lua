@@ -23,6 +23,11 @@ function Explosion:init(properties)
   end)
 
   Game:shakeScreen()
+  
+  Game.hitstop = true
+  Game.timer:after(0.1, function()
+    Game.hitstop = false
+  end)
 end
 
 return Explosion

@@ -14,6 +14,8 @@ local Game = {}
 
 function Game:init()
   print('Loading Gamestate \'Game\'')
+  self.hitstop = false
+
   self.entities = EntitySystem()
 
   self.world = Physics.newWorld(0, 0, true)
@@ -58,6 +60,9 @@ end
 
 function Game:update(dt)
   self.timer:update(dt)
+
+  if self.hitstop then return end
+
   self.world:update(dt)
   self.entities:loop('update', dt)
 end
