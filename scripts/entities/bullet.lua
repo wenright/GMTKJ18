@@ -1,6 +1,8 @@
 local Class = require 'lib.hump.class'
 local Vector = require 'lib.hump.vector'
 
+local Explosion = require 'scripts.entities.explosion'
+
 local Base = require 'scripts.entities.rigidbody'
 
 local Bullet = Class {__includes = Base}
@@ -20,6 +22,9 @@ function Bullet:update(dt)
   Base.update(self, dt)
 
   if self.body:enter('player') then
+    Game:instantiate(Explosion({x = self.position.x, y = self.position.y, amount = 3, color = {r = 250/255, g = 221/255, b = 215/255}}))
+    Game:instantiate(Explosion({x = self.position.x, y = self.position.y, amount = 6}))
+
     local collision = self.body:getEnterCollisionData('player')
     local player = collision.collider:getObject()
     player:damage()

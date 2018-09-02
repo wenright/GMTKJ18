@@ -1,5 +1,6 @@
 local Physics = require 'lib.windfield.windfield'
 local Camera = require 'lib.hump.camera'
+local Timer = require 'lib.hump.timer'
 
 local EntitySystem = require 'scripts.entitysystem'
 
@@ -7,6 +8,9 @@ local Player = require 'scripts.entities.player'
 local Enemy = require 'scripts.entities.enemy'
 
 local Game = {}
+
+-- RED: r = 218/255, g = 100/255, b = 115/255
+-- whiteish: r = 250/255, g = 221/255, b = 215/255
 
 function Game:init()
   print('Loading Gamestate \'Game\'')
@@ -17,7 +21,12 @@ function Game:init()
   self.world:addCollisionClass('enemy', {ignores = {'enemy'}})
 
   self.player = self:instantiate(Player {x = 50, y = 50})
-  local enemy = self:instantiate(Enemy {x = 50, y = 0})
+
+  self.timer = Timer.new()
+  self.timer:every(2, function()
+    local x = love.math.random() * GAME_WIDTH
+    local enemy = self:instantiate(Enemy {x = x, y = 0})
+  end)
 
   self.camera = Camera()
   self.canvas = love.graphics.newCanvas(GAME_WIDTH, GAME_HEIGHT)
@@ -32,6 +41,7 @@ function Game:enter()
 end
 
 function Game:update(dt)
+  self.timer:update(dt)
   self.world:update(dt)
   self.entities:loop('update', dt)
 end
@@ -81,8 +91,10 @@ function Game:instantiate(obj)
 end
 
 function Game:destroy(obj)
-  self.entities:remove(obj)
-  obj:destroy()
+  self.timer:after(0, function()
+    self.entities:remove(obj)
+    obj:destroy()
+  end)
 end
 
 return Game

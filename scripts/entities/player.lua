@@ -1,6 +1,8 @@
 local Class = require 'lib.hump.class'
 local Vector = require 'lib.hump.vector'
 
+local Explosion = require 'scripts.entities.explosion'
+
 local Base = require 'scripts.entities.ship'
 
 local Player = Class {__includes = Base}
@@ -67,11 +69,14 @@ function Player:draw()
 end
 
 function Player:damage()
+  if self.invincible then return end
+
   self.hp = self.hp - 1
 
   if self.hp <= 0 then
     Game.over = true
     Game:destroy(self)
+    Game:instantiate(Explosion({x = self.position.x, y = self.position.y}))
   end
 end
 

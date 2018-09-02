@@ -19,4 +19,8 @@ function Entity:update(dt)
   self.timer:update(dt)
 end
 
+function Entity:destroy()
+  -- 
+end
+
 return Entity
