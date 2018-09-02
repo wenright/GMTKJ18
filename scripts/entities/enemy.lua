@@ -18,14 +18,11 @@ function Enemy:init(properties)
   self.r = 0
   self.t = love.math.random() * math.pi * 2
   self.s = love.math.random() / 2 + 1
+  self.ROF = properties.ROF
 
   self.img = love.graphics.newImage('art/enemy.png')
 
   self:loopFire()
-
-  self.timer:after(5, function()
-    Game:destroy(self)
-  end)
 end
 
 function Enemy:update(dt)
@@ -36,7 +33,14 @@ function Enemy:update(dt)
   local vx, vy = self.body:getLinearVelocity()
   self.r = math.atan2(vy, vx) - math.pi / 2
 
-  self.body:applyForce(self.speed * math.cos(self.t * 2), self.speed)
+  local v = Game.player.position - self.position
+  if Game.player.invincible and v:len() < 95 then
+    self.body:applyForce((v:normalized() * -self.speed / 2):unpack())
+  elseif self.t < 7 then
+    self.body:applyForce((v:normalized() * self.speed):unpack())
+  else
+    self.body:applyForce(self.speed * math.cos(self.t * 2), self.speed)
+  end
 
   if self.body:enter('player') then
     Game:instantiate(Explosion({x = self.position.x, y = self.position.y, size = 6}))
@@ -51,7 +55,7 @@ function Enemy:update(dt)
 
     local wasInvincible = player:damage()
     if wasInvincible then
-      local score = 10 * player.combo
+      local score = 5 * player.combo
       player.combo = player.combo + 1
       Game:instantiate(Text({x = self.position.x, y = self.position.y, text = '' .. score}))
       player.score = player.score + score
@@ -75,10 +79,12 @@ function Enemy:draw()
 end
 
 function Enemy:loopFire()
-  self.timer:after(love.math.random() / 2 + 0.4, function()
-    local bullet = Game:instantiate(Bullet {x = self.position.x, y = self.position.y + 4})
+  local speed = 0.75
+
+  self.timer:after(love.math.random() / 2 + self.ROF, function()
+    local bullet = Game:instantiate(Bullet {x = self.position.x, y = self.position.y})
     local v = Game.player.position - self.position
-    bullet.body:applyLinearImpulse(v:normalized():unpack())
+    bullet.body:applyLinearImpulse((v:normalized() * speed):unpack())
 
     self:loopFire()
   end)

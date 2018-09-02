@@ -32,9 +32,11 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.print(love.timer.getFPS() .. ' FPS', love.graphics.getWidth() - 60)
-  love.graphics.print(memoryUsage .. ' KB', love.graphics.getWidth() - 60, 20)
+  if DEBUG then
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(love.timer.getFPS() .. ' FPS', love.graphics.getWidth() - 60)
+    love.graphics.print(memoryUsage .. ' KB', love.graphics.getWidth() - 60, 20)
+  end
 end
 
 function love.keypressed(button)

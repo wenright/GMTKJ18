@@ -22,7 +22,7 @@ function Game:init()
   self.world:addCollisionClass('player', {ignores = {'player'}})
   self.world:addCollisionClass('enemy', {ignores = {'enemy'}})
 
-  self.player = self:instantiate(Player {x = GAME_WIDTH/2, y = GAME_HEIGHT-15})
+  self.player = self:instantiate(Player {x = GAME_WIDTH/2, y = GAME_HEIGHT/2})
 
   self.timer = Timer.new()
 
@@ -73,8 +73,8 @@ function Game:update(dt)
   self.world:update(dt)
   self.entities:loop('update', dt)
 
-  if self.over and love.keyboard.isDown('r') then
-
+  -- The r looks like an a w/ this font
+  if self.over and love.keyboard.isDown('r', 'a') then
     self:init()
   end
 end
@@ -140,12 +140,15 @@ function Game:spawnEnemies()
   for i=1, self.numEnemies do
     self.timer:after(love.math.random() * 2 + 1, function()
       local x = love.math.random() * (GAME_WIDTH - 20) + 10
-      local enemy = self:instantiate(Enemy {x = x, y = 0})
+      local enemy = self:instantiate(Enemy {x = x, y = 0, ROF = 0.4 - self.numEnemies / 50})
     end)
   end
 
-  self.numEnemies = self.numEnemies + math.floor(love.math.random() * 2)
-  self.player.maxHp = self.player.maxHp + 1
+  self.numEnemies = math.max(self.numEnemies + math.max(math.floor((love.math.random() - 0.25) * 2.5), -1), 1)
+
+  if self.player.maxHp < self.player.maxMaxHp then
+    self.player.maxHp = self.player.maxHp + 1
+  end
 end
 
 return Game

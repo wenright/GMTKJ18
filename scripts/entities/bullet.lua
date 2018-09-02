@@ -2,6 +2,7 @@ local Class = require 'lib.hump.class'
 local Vector = require 'lib.hump.vector'
 
 local Explosion = require 'scripts.entities.explosion'
+local Text = require 'scripts.entities.text'
 
 local Base = require 'scripts.entities.rigidbody'
 
@@ -18,7 +19,7 @@ function Bullet:init(properties)
 
   self.img = love.graphics.newImage('art/bullet.png')
 
-  self.timer:after(1, function()
+  self.timer:after(5, function()
     Game:destroy(self)
   end)
 
@@ -54,7 +55,13 @@ function Bullet:update(dt)
     local collision = self.body:getEnterCollisionData('player')
     local player = collision.collider:getObject()
 
-    player:damage()
+    local wasInvincible = player:damage()
+    if wasInvincible then
+      local score = 1 * player.combo
+      player.combo = player.combo + 1
+      Game:instantiate(Text({x = self.position.x, y = self.position.y, text = '' .. score}))
+      player.score = player.score + score
+    end
 
     Game:destroy(self)
   end

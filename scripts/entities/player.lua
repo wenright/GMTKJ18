@@ -14,6 +14,7 @@ function Player:init(properties)
 
   self.speed = 500
 
+  self.maxMaxHp = 15
   self.maxHp = 2
   self.hp = 3
   self.chargeTime = 5
@@ -22,6 +23,7 @@ function Player:init(properties)
   self.invincibleTime = 3
   self.hideShield = false
   self.score = 0
+  self.r = 0
 
   self:startShieldCharge()
 
@@ -31,7 +33,7 @@ function Player:init(properties)
     table.insert(self.lastPositions, self.position:clone())
   end
 
-  self.timer:every(0.05, function()
+  self.timer:every(0.04, function()
     table.remove(self.lastPositions, 1)
     table.insert(self.lastPositions, self.position:clone())
   end)
@@ -43,6 +45,9 @@ end
 
 function Player:update(dt)
   Base.update(self, dt)
+
+  local vx, vy = self.body:getLinearVelocity()
+  self.r = math.atan2(vy, vx) + math.pi / 2
 
   local delta = Vector(0, 0)
 
@@ -68,11 +73,11 @@ end
 function Player:draw()
   for k, pos in pairs(self.lastPositions) do
     love.graphics.setColor(1, 1, 1, 0.4)
-    love.graphics.draw(self.img, pos.x, pos.y, 0, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
+    love.graphics.draw(self.img, pos.x, pos.y, self.r, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
   end
 
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(self.img, self.position.x, self.position.y, 0, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
+  love.graphics.draw(self.img, self.position.x, self.position.y, self.r, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
 
   if self.invincible and not self.hideShield then
     love.graphics.draw(self.bubbleImg, self.position.x, self.position.y, 0, 1, 1, self.bubbleImg:getWidth() / 2, self.bubbleImg:getHeight() / 2)
