@@ -12,7 +12,7 @@ function Player:init(properties)
 
   Base.init(self, properties)
 
-  self.speed = 250000
+  self.speed = 500
 
   self.hp = 3
   self.chargeTime = 5
@@ -55,11 +55,11 @@ function Player:update(dt)
     delta.y = 1
   end
 
+  self.body:applyForce((delta:normalized() * self.speed):unpack())
+
   if love.keyboard.isDown('space') then
     self:useShield()
   end
-
-  self.body:applyForce((delta:normalized() * self.speed * dt):unpack())
 end
 
 function Player:draw()

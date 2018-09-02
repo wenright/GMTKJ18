@@ -16,6 +16,10 @@ function Bullet:init(properties)
   self.speed = 250000
 
   self.img = love.graphics.newImage('art/bullet.png')
+
+  self.timer:after(1, function()
+    Game:destroy(self)
+  end)
 end
 
 function Bullet:update(dt)

@@ -3,6 +3,7 @@ local Vector = require 'lib.hump.vector'
 
 local Bullet = require 'scripts.entities.bullet'
 local Explosion = require 'scripts.entities.explosion'
+local Text = require 'scripts.entities.text'
 
 local Base = require 'scripts.entities.ship'
 
@@ -13,7 +14,7 @@ function Enemy:init(properties)
 
   Base.init(self, properties)
 
-  self.speed = 50000
+  self.speed = 200
 
   self.img = love.graphics.newImage('art/enemy.png')
 
@@ -21,15 +22,20 @@ function Enemy:init(properties)
     local bullet = Game:instantiate(Bullet {x = self.position.x, y = self.position.y})
     bullet.body:applyLinearImpulse(0, 1)
   end)
+
+  self.timer:after(5, function()
+    Game:destroy(self)
+  end)
 end
 
 function Enemy:update(dt)
   Base.update(self, dt)
 
-  self.body:applyForce(0, self.speed * dt)
+  self.body:applyForce(0, self.speed)
 
   if self.body:enter('player') then
     Game:instantiate(Explosion({x = self.position.x, y = self.position.y}))
+    Game:instantiate(Text({x = self.position.x, y = self.position.y, text = '100'}))
 
     local collision = self.body:getEnterCollisionData('player')
     local player = collision.collider:getObject()

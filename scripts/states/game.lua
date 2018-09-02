@@ -25,7 +25,7 @@ function Game:init()
   self.player = self:instantiate(Player {x = GAME_WIDTH/2, y = GAME_HEIGHT-15})
 
   self.timer = Timer.new()
-  self.timer:every(2, function()
+  self.timer:every(1, function()
     local x = love.math.random() * GAME_WIDTH
     local enemy = self:instantiate(Enemy {x = x, y = 0})
   end)
@@ -34,7 +34,8 @@ function Game:init()
   self.cameraStart = Vector(self.camera.x, self.camera.y)
   self.canvas = love.graphics.newCanvas(GAME_WIDTH, GAME_HEIGHT)
 
-  love.graphics.setBackgroundColor(0.13, 0.13, 0.13, 1)
+  self.defaultBg = {0.13, 0.13, 0.13, 1}
+  self.bg = {0.13, 0.13, 0.13, 1}
 
   -- Walls for player collision
   local wallLeft = self.world:newRectangleCollider(-20, 0, 20, GAME_HEIGHT)
@@ -68,6 +69,8 @@ function Game:update(dt)
 end
 
 function Game:draw()
+  love.graphics.setBackgroundColor(self.bg)
+
   love.graphics.setCanvas(self.canvas)
   love.graphics.clear()
 
