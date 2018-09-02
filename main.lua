@@ -8,7 +8,7 @@ Game = require 'scripts.states.game'
 local mainTimer
 local memoryUsage = 0
 
-DEBUG = true
+DEBUG = false
 
 function love.load()
   print('Love initialized!')

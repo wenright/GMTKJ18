@@ -4,6 +4,7 @@ local Camera = require 'lib.hump.camera'
 local EntitySystem = require 'scripts.entitysystem'
 
 local Player = require 'scripts.entities.player'
+local Enemy = require 'scripts.entities.enemy'
 
 local Game = {}
 
@@ -15,7 +16,8 @@ function Game:init()
   self.world:addCollisionClass('friendly', {ignores = {'friendly'}})
   self.world:addCollisionClass('enemy', {ignores = {'enemy'}})
 
-  local player = self:instantiate(Player({x = 50, y = 50}))
+  local player = self:instantiate(Player {x = 50, y = 50})
+  local enemy = self:instantiate(Enemy {x = 50, y = 0})
 
   self.camera = Camera()
   self.canvas = love.graphics.newCanvas(GAME_WIDTH, GAME_HEIGHT)

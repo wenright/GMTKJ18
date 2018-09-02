@@ -24,7 +24,6 @@ function Rigidbody:update(dt)
 
   local x, y = self.body:getPosition()
   self.position = Vector(x, y)
-  print(x, y)
 end
 
 function Rigidbody:addForce(fx, fy)

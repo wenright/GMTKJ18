@@ -6,6 +6,8 @@ local Base = require 'scripts.entities.ship'
 local Player = Class {__includes = Base}
 
 function Player:init(properties)
+  properties.team = 'friendly'
+
   Base.init(self, properties)
 
   self.speed = 250000
