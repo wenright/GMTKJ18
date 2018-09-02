@@ -21,6 +21,8 @@ function Explosion:init(properties)
   self.timer:after(2, function()
     Game:destroy(self)
   end)
+
+  Game:shakeScreen()
 end
 
 return Explosion
