@@ -12,7 +12,7 @@ function Enemy:init(properties)
 
   Base.init(self, properties)
 
-  self.speed = 250000
+  self.speed = 50000
 
   self.img = love.graphics.newImage('art/enemy.png')
 
@@ -24,6 +24,15 @@ end
 
 function Enemy:update(dt)
   Base.update(self, dt)
+
+  self.body:applyForce(0, self.speed * dt)
+
+  if self.body:enter('player') then
+    local collision = self.body:getEnterCollisionData('player')
+    local player = collision.collider:getObject()
+    player:damage()
+    Game:destroy(self)
+  end
 end
 
 function Enemy:draw()

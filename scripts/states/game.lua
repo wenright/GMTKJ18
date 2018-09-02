@@ -16,13 +16,15 @@ function Game:init()
   self.world:addCollisionClass('player', {ignores = {'player'}})
   self.world:addCollisionClass('enemy', {ignores = {'enemy'}})
 
-  local player = self:instantiate(Player {x = 50, y = 50})
+  self.player = self:instantiate(Player {x = 50, y = 50})
   local enemy = self:instantiate(Enemy {x = 50, y = 0})
 
   self.camera = Camera()
   self.canvas = love.graphics.newCanvas(GAME_WIDTH, GAME_HEIGHT)
 
   love.graphics.setBackgroundColor(0.13, 0.13, 0.13, 1)
+
+  self.shieldImg = love.graphics.newImage('art/shield.png')
 end
 
 function Game:enter()
@@ -49,6 +51,10 @@ function Game:draw()
   if self.over then
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.printf('Game over!', 0, GAME_HEIGHT / 2 - 10, 100, 'center')
+  end
+
+  for i=0, self.player.hp - 1 do
+    love.graphics.draw(self.shieldImg, i * self.shieldImg:getWidth() * 3 / 4)
   end
 
   love.graphics.setCanvas()
