@@ -48,14 +48,24 @@ function Game:draw()
 
   self.camera:detach()
 
+  -- This stuff is for the UI, probably should be moved to a UI class
+
+  -- Game over
   if self.over then
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.printf('Game over!', 0, GAME_HEIGHT / 2 - 10, 100, 'center')
   end
 
+  -- Player health
   for i=0, self.player.hp - 1 do
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(self.shieldImg, i * self.shieldImg:getWidth() * 3 / 4)
   end
+
+  -- Player shield charge value
+  love.graphics.setColor(199/255, 214/255, 205/255, 1)
+  love.graphics.arc('fill', GAME_WIDTH / 2, GAME_HEIGHT - 5, 5, -math.pi / 2, (math.pi * 2) * self.player.shieldPercentage - math.pi / 2)
+
 
   love.graphics.setCanvas()
 
