@@ -93,7 +93,7 @@ function Player:damage()
     sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
     sound:play()
 
-    return
+    return true
   end
 
   self.hp = self.hp - 1
@@ -108,6 +108,8 @@ function Player:damage()
     sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
     sound:play()
   end
+
+  return false
 end
 
 function Player:startShieldCharge()
@@ -138,7 +140,7 @@ function Player:useShield()
   end
 
   local flashTimer = nil
-  self.timer:after(self.invincibleTime - 0.75, function()
+  self.timer:after(self.invincibleTime - 0.5, function()
     self.hideShield = true
     flashTimer = self.timer:every(0.075, function()
       self.hideShield = not self.hideShield

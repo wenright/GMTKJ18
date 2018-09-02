@@ -23,7 +23,7 @@ function Bullet:init(properties)
 
   local sound = love.audio.newSource('sounds/laser2.wav', 'static')
   sound:setVolume(0.6)
-  sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
+  sound:setPitch((love.math.random() - 0.5) * 0.3 + 1)
   sound:play()
 end
 
@@ -35,7 +35,7 @@ function Bullet:update(dt)
     Game:instantiate(Explosion({x = self.position.x, y = self.position.y, amount = 6, size = 2}))
 
     local sound = love.audio.newSource('sounds/laser_hit.wav', 'static')
-    sound:setVolume(0.6)
+    sound:setVolume(0.4)
     sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
     sound:play()
 

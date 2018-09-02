@@ -32,7 +32,6 @@ function Enemy:update(dt)
 
   if self.body:enter('player') then
     Game:instantiate(Explosion({x = self.position.x, y = self.position.y, size = 6}))
-    -- Game:instantiate(Text({x = self.position.x, y = self.position.y, text = '100'}))
 
     local sound = love.audio.newSource('sounds/hit.wav', 'static')
     sound:setVolume(0.6)
@@ -41,7 +40,13 @@ function Enemy:update(dt)
 
     local collision = self.body:getEnterCollisionData('player')
     local player = collision.collider:getObject()
-    player:damage()
+
+    local wasInvincible = player:damage()
+    if wasInvincible then
+      Game:instantiate(Text({x = self.position.x, y = self.position.y, text = '100'}))
+      -- player:
+    end
+
     Game:destroy(self)
   end
 
@@ -56,8 +61,8 @@ function Enemy:draw()
 end
 
 function Enemy:loopFire()
-  self.timer:after(love.math.random() + 0.5, function()
-    local bullet = Game:instantiate(Bullet {x = self.position.x, y = self.position.y})
+  self.timer:after(love.math.random() / 2 + 0.4, function()
+    local bullet = Game:instantiate(Bullet {x = self.position.x, y = self.position.y + 4})
     bullet.body:applyLinearImpulse(0, 1)
 
     self:loopFire()
