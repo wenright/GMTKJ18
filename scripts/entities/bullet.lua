@@ -18,6 +18,13 @@ end
 
 function Bullet:update(dt)
   Base.update(self, dt)
+
+  if self.body:enter('player') then
+    local collision = self.body:getEnterCollisionData('player')
+    local player = collision.collider:getObject()
+    player:damage()
+    Game:destroy(self)
+  end
 end
 
 function Bullet:draw()

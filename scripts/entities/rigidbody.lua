@@ -12,11 +12,12 @@ function Rigidbody:init(properties)
 
   self.drag = properties.drag or 25
 
-  self.team = properties.team or 'friendly'
+  self.team = properties.team or 'enemy'
 
   self.body = Game.world:newCircleCollider(self.position.x, self.position.y, self.r)
   self.body:setLinearDamping(self.drag)
   self.body:setCollisionClass(self.team)
+  self.body:setObject(self)
 end
 
 function Rigidbody:update(dt)

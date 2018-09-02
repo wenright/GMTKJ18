@@ -19,6 +19,7 @@ function love.load()
   end)
 
   love.graphics.setDefaultFilter('nearest', 'nearest')
+  love.graphics.setNewFont('art/fonts/kenney_future.ttf')
 
   Gamestate.registerEvents()
   Gamestate.switch(Game)
@@ -32,8 +33,8 @@ end
 
 function love.draw()
   love.graphics.setColor(1, 1, 1)
-  love.graphics.print(love.timer.getFPS() .. ' FPS')
-  love.graphics.print(memoryUsage .. ' KB', 0, 20)
+  love.graphics.print(love.timer.getFPS() .. ' FPS', love.graphics.getWidth() - 60)
+  love.graphics.print(memoryUsage .. ' KB', love.graphics.getWidth() - 60, 20)
 end
 
 function love.keypressed(button)

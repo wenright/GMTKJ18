@@ -13,7 +13,7 @@ function Game:init()
   self.entities = EntitySystem()
 
   self.world = Physics.newWorld(0, 0, true)
-  self.world:addCollisionClass('friendly', {ignores = {'friendly'}})
+  self.world:addCollisionClass('player', {ignores = {'player'}})
   self.world:addCollisionClass('enemy', {ignores = {'enemy'}})
 
   local player = self:instantiate(Player {x = 50, y = 50})
@@ -45,6 +45,11 @@ function Game:draw()
   if DEBUG then self.world:draw() end
 
   self.camera:detach()
+
+  if self.over then
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.printf('Game over!', 0, GAME_HEIGHT / 2 - 10, 100, 'center')
+  end
 
   love.graphics.setCanvas()
 
