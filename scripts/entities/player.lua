@@ -35,6 +35,7 @@ function Player:init(properties)
   end)
 
   self.bubbleImg = love.graphics.newImage('art/bubble.png')
+  self.shieldImg = love.graphics.newImage('art/shield.png')
 end
 
 function Player:update(dt)
@@ -73,6 +74,16 @@ function Player:draw()
   if self.invincible and not self.hideShield then
     love.graphics.draw(self.bubbleImg, self.position.x, self.position.y, 0, 1, 1, self.bubbleImg:getWidth() / 2, self.bubbleImg:getHeight() / 2)
   end
+
+  -- Health
+  for i=0, self.hp - 1 do
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(self.shieldImg, i * self.shieldImg:getWidth() * 3 / 4)
+  end
+
+  -- Shield charge value
+  love.graphics.setColor(199/255, 214/255, 205/255, 1)
+  love.graphics.arc('fill', GAME_WIDTH / 2, GAME_HEIGHT - 5, 5, -math.pi / 2, (math.pi * 2) * self.shieldPercentage - math.pi / 2)
 end
 
 function Player:damage()

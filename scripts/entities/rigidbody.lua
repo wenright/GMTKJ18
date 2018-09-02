@@ -18,6 +18,7 @@ function Rigidbody:init(properties)
   self.body:setLinearDamping(self.drag)
   self.body:setCollisionClass(self.team)
   self.body:setObject(self)
+  self.body:setType(properties.bodyType or 'dynamic')
 end
 
 function Rigidbody:update(dt)

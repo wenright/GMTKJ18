@@ -4,7 +4,6 @@ local Timer = require 'lib.hump.timer'
 local Vector = require 'lib.hump.vector'
 
 local EntitySystem = require 'scripts.entitysystem'
-
 local Player = require 'scripts.entities.player'
 local Enemy = require 'scripts.entities.enemy'
 
@@ -21,7 +20,7 @@ function Game:init()
   self.world:addCollisionClass('player', {ignores = {'player'}})
   self.world:addCollisionClass('enemy', {ignores = {'enemy'}})
 
-  self.player = self:instantiate(Player {x = 50, y = 50})
+  self.player = self:instantiate(Player {x = GAME_WIDTH/2, y = GAME_HEIGHT-15})
 
   self.timer = Timer.new()
   self.timer:every(2, function()
@@ -35,7 +34,22 @@ function Game:init()
 
   love.graphics.setBackgroundColor(0.13, 0.13, 0.13, 1)
 
-  self.shieldImg = love.graphics.newImage('art/shield.png')
+  -- Walls for player collision
+  local wallLeft = self.world:newRectangleCollider(-20, 0, 20, GAME_HEIGHT)
+  wallLeft:setType('static')
+  wallLeft:setCollisionClass('enemy')
+
+  local wallRight = self.world:newRectangleCollider(GAME_WIDTH, 0, 20, GAME_HEIGHT)
+  wallRight:setType('static')
+  wallRight:setCollisionClass('enemy')
+
+  local wallUp = self.world:newRectangleCollider(0, -20, GAME_WIDTH, 20)
+  wallUp:setType('static')
+  wallUp:setCollisionClass('enemy')
+
+  local wallDown = self.world:newRectangleCollider(0, GAME_HEIGHT, GAME_WIDTH, 20)
+  wallDown:setType('static')
+  wallDown:setCollisionClass('enemy')
 end
 
 function Game:enter()
@@ -58,23 +72,11 @@ function Game:draw()
 
   if DEBUG then self.world:draw() end
 
-  -- This stuff is for the UI, probably should be moved to a UI class
-
   -- Game over
   if self.over then
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.printf('Game over!', 0, GAME_HEIGHT / 2 - 10, 100, 'center')
   end
-
-  -- Player health
-  for i=0, self.player.hp - 1 do
-    love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(self.shieldImg, i * self.shieldImg:getWidth() * 3 / 4)
-  end
-
-  -- Player shield charge value
-  love.graphics.setColor(199/255, 214/255, 205/255, 1)
-  love.graphics.arc('fill', GAME_WIDTH / 2, GAME_HEIGHT - 5, 5, -math.pi / 2, (math.pi * 2) * self.player.shieldPercentage - math.pi / 2)
 
   self.camera:detach()
 
