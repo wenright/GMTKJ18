@@ -14,12 +14,14 @@ function Player:init(properties)
 
   self.speed = 500
 
+  self.maxHp = 2
   self.hp = 3
   self.chargeTime = 5
   self.shieldReady = false
   self.shieldPercentage = 0
   self.invincibleTime = 3
   self.hideShield = false
+  self.score = 0
 
   self:startShieldCharge()
 
@@ -36,6 +38,7 @@ function Player:init(properties)
 
   self.bubbleImg = love.graphics.newImage('art/bubble.png')
   self.shieldImg = love.graphics.newImage('art/shield.png')
+  self.emptyShieldImg = love.graphics.newImage('art/empty_shield.png')
 end
 
 function Player:update(dt)
@@ -79,6 +82,11 @@ function Player:draw()
   for i=0, self.hp - 1 do
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(self.shieldImg, i * self.shieldImg:getWidth() * 3 / 4)
+  end
+
+  for i=self.hp, self.maxHp - 1 do
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(self.emptyShieldImg, i * self.emptyShieldImg:getWidth() * 3 / 4)
   end
 
   -- Shield charge value
@@ -131,6 +139,8 @@ function Player:useShield()
   self.shieldReady = false
   self.invincible = true
   self.hideShield = false
+
+  self.combo = 1
 
   do
     local sound = love.audio.newSource('sounds/powerup.wav', 'static')

@@ -1,7 +1,7 @@
 --- A configuration file for LOVE
 -- @module conf
 
-GAME_WIDTH = 96
+GAME_WIDTH = 200
 GAME_HEIGHT = 128
 SCALE_X = 6
 SCALE_Y = 6

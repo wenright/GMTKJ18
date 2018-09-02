@@ -35,7 +35,9 @@ function Rigidbody:addForce(fx, fy)
 end
 
 function Rigidbody:destroy()
-  self.body:destroy()
+  if self.body and not self.body:isDestroyed() then
+    self.body:destroy()
+  end
 end
 
 return Rigidbody

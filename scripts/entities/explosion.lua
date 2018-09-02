@@ -26,18 +26,22 @@ function Explosion:init(properties)
     Game:destroy(self)
   end)
 
+  -- Screenshake
   Game:shakeScreen()
 
-  Game.hitstop = true
-  Game.timer:after(0.1, function()
-    Game.hitstop = false
-  end)
+  -- Hitstop
+  if properties.stop then
+    Game.hitstop = true
+    Game.timer:after(0.1, function()
+      Game.hitstop = false
+    end)
+  end
+
+  -- Screen flash
   Game.bg = Game.hitBg
   Game.timer:after(0.05, function()
     Game.bg = Game.defaultBg
   end)
-
-
 end
 
 function Explosion:draw()

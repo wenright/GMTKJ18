@@ -13,7 +13,8 @@ function Bullet:init(properties)
 
   Base.init(self, properties)
 
-  self.speed = 250000
+  self.r = 0
+  self.t = 0
 
   self.img = love.graphics.newImage('art/bullet.png')
 
@@ -30,9 +31,20 @@ end
 function Bullet:update(dt)
   Base.update(self, dt)
 
+  self.t = self.t + dt
+
+  local vx, vy = self.body:getLinearVelocity()
+  self.r = math.atan2(vy, vx) - math.pi / 2
+
   if self.body:enter('player') then
-    Game:instantiate(Explosion({x = self.position.x, y = self.position.y, amount = 3, color = {250/255, 221/255, 215/255}}))
-    Game:instantiate(Explosion({x = self.position.x, y = self.position.y, amount = 6, size = 2}))
+    -- Dont do damage if too close to player
+    if self.t < 0.075 then
+      Game:destroy(self)
+      return
+    end
+
+    Game:instantiate(Explosion({x = self.position.x, y = self.position.y, amount = 3, color = {250/255, 221/255, 215/255}, stop = false}))
+    Game:instantiate(Explosion({x = self.position.x, y = self.position.y, amount = 6, size = 2, stop = false}))
 
     local sound = love.audio.newSource('sounds/laser_hit.wav', 'static')
     sound:setVolume(0.4)
@@ -41,7 +53,9 @@ function Bullet:update(dt)
 
     local collision = self.body:getEnterCollisionData('player')
     local player = collision.collider:getObject()
+
     player:damage()
+
     Game:destroy(self)
   end
 
@@ -52,7 +66,7 @@ end
 
 function Bullet:draw()
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(self.img, self.position.x, self.position.y, 0, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
+  love.graphics.draw(self.img, self.position.x, self.position.y, self.r, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
 end
 
 return Bullet
