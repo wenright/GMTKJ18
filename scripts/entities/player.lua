@@ -19,6 +19,7 @@ function Player:init(properties)
   self.shieldReady = false
   self.shieldPercentage = 0
   self.invincibleTime = 3
+  self.hideShield = false
 
   self:startShieldCharge()
 
@@ -32,6 +33,8 @@ function Player:init(properties)
     table.remove(self.lastPositions, 1)
     table.insert(self.lastPositions, self.position:clone())
   end)
+
+  self.bubbleImg = love.graphics.newImage('art/bubble.png')
 end
 
 function Player:update(dt)
@@ -59,13 +62,17 @@ function Player:update(dt)
 end
 
 function Player:draw()
-  -- for k, pos in pairs(self.lastPositions) do
-  --   love.graphics.setColor(1, 1, 1, 0.4)
-  --   love.graphics.draw(self.img, pos.x, pos.y, 0, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
-  -- end
+  for k, pos in pairs(self.lastPositions) do
+    love.graphics.setColor(1, 1, 1, 0.4)
+    love.graphics.draw(self.img, pos.x, pos.y, 0, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
+  end
 
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.draw(self.img, self.position.x, self.position.y, 0, 1, 1, self.img:getWidth() / 2, self.img:getHeight() / 2)
+
+  if self.invincible and not self.hideShield then
+    love.graphics.draw(self.bubbleImg, self.position.x, self.position.y, 0, 1, 1, self.bubbleImg:getWidth() / 2, self.bubbleImg:getHeight() / 2)
+  end
 end
 
 function Player:damage()
@@ -93,11 +100,24 @@ function Player:useShield()
 
   self.shieldReady = false
   self.invincible = true
+  self.hideShield = false
+
+  local flashTimer = nil
+  self.timer:after(self.invincibleTime - 0.75, function()
+    self.hideShield = true
+    flashTimer = self.timer:every(0.075, function()
+      self.hideShield = not self.hideShield
+    end)
+  end)
 
   self.timer:after(self.invincibleTime, function()
     self.invincible = false
     self:startShieldCharge()
+    self.timer:cancel(flashTimer)
   end)
+
+  self.bubbleOpacity = 1
+  self.timer:tween(self.invincibleTime, self, {bubbleOpacity = 0}, 'in-bounce')
 end
 
 return Player
