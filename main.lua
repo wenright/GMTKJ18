@@ -1,3 +1,5 @@
+require 'lib.minimal_sound_manager'
+
 local Gamestate = require 'lib.hump.gamestate'
 local Timer = require 'lib.hump.timer'
 local Lovebird = require 'lib.lovebird.lovebird'

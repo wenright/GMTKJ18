@@ -19,16 +19,18 @@ function Debris:init(properties)
   self.timer:tween(1, self, {opacity = 0}, 'in-quad')
 
   if love.math.random() > 0.5 then
-    self.color = {r = 199/255, g = 214/255, b = 205/255}
+    self.color = {199/255, 214/255, 205/255}
   else
-    self.color = {r = 124/255, g = 162/255, b = 152/255}
+    self.color = {124/255, 162/255, 152/255}
   end
 
   self.color = properties.color or self.color
 end
 
 function Debris:draw()
-  love.graphics.setColor(self.color.r, self.color.g, self.color.b, self.opacity)
+  love.graphics.setColor(self.color)
+  local r, g, b = love.graphics.getColor()
+  love.graphics.setColor(r, g, b, self.opacity)
   love.graphics.rectangle('fill', self.position.x, self.position.y, 1, 1)
 end
 

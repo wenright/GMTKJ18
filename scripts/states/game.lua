@@ -26,7 +26,7 @@ function Game:init()
 
   self.timer = Timer.new()
   self.timer:every(1, function()
-    local x = love.math.random() * GAME_WIDTH
+    local x = love.math.random() * (GAME_WIDTH - 20) + 10
     local enemy = self:instantiate(Enemy {x = x, y = 0})
   end)
 
@@ -35,7 +35,7 @@ function Game:init()
   self.canvas = love.graphics.newCanvas(GAME_WIDTH, GAME_HEIGHT)
 
   self.defaultBg = {0.13, 0.13, 0.13, 1}
-  self.hitBg = {0.25, 0.25, 0.25, 1}
+  self.hitBg = {0.18, 0.18, 0.18, 1}
   self.bg = {0.13, 0.13, 0.13, 1}
 
   -- Walls for player collision

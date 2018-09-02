@@ -87,20 +87,37 @@ function Player:draw()
 end
 
 function Player:damage()
-  if self.invincible then return end
+  if self.invincible then
+    local sound = love.audio.newSource('sounds/shield_hit.wav', 'static')
+    sound:setVolume(0.75)
+    sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
+    sound:play()
+
+    return
+  end
 
   self.hp = self.hp - 1
 
   if self.hp <= 0 then
     Game.over = true
     Game:destroy(self)
-    Game:instantiate(Explosion({x = self.position.x, y = self.position.y}))
+    Game:instantiate(Explosion({x = self.position.x, y = self.position.y, size = 8}))
+
+    local sound = love.audio.newSource('sounds/explosion.wav', 'static')
+    sound:setVolume(0.75)
+    sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
+    sound:play()
   end
 end
 
 function Player:startShieldCharge()
   self.timer:tween(self.chargeTime, self, {shieldPercentage = 1}, 'linear', function()
     self.shieldReady = true
+
+    local sound = love.audio.newSource('sounds/bloop.wav', 'static')
+    sound:setVolume(0.75)
+    sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
+    sound:play()
   end)
 end
 
@@ -113,12 +130,24 @@ function Player:useShield()
   self.invincible = true
   self.hideShield = false
 
+  do
+    local sound = love.audio.newSource('sounds/powerup.wav', 'static')
+    sound:setVolume(0.75)
+    sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
+    sound:play()
+  end
+
   local flashTimer = nil
   self.timer:after(self.invincibleTime - 0.75, function()
     self.hideShield = true
     flashTimer = self.timer:every(0.075, function()
       self.hideShield = not self.hideShield
     end)
+
+    local sound = love.audio.newSource('sounds/shield_low.wav', 'static')
+    sound:setVolume(0.75)
+    sound:setPitch((love.math.random() - 0.5) * 0.1 + 1)
+    sound:play()
   end)
 
   self.timer:after(self.invincibleTime, function()
